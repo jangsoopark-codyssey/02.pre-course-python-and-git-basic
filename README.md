@@ -108,18 +108,52 @@
 ## 4. 실행 방법
 
 
+### 4.1 프로젝트 다운로드
+#### 1) Git Clone
+```bash
+git clone https://github.com/jangsoopark-codyssey/02.pre-course-python-and-git-basic.git
+```
+
+#### 2) 직접 다운로드
+- 웹 브라우저에서 `https://github.com/jangsoopark-codyssey/02.pre-course-python-and-git-basic` 이동 후 `"<> Code" -> "Download ZIP"` 
+
+![alt text](assets/figure/03.git-download.png)
+
+### 4.2 `scripts/run.sh` 스크립트 활용
+```bash
+cd scripts
+
+./run.sh
+```
+
+### 4.3 `Python` 이용하여 직접 실행
+```bash
+$python $run
+```
+
+### 4.4 실행 명령 인자  (TODO)
+표로 정리
+
 ---
 
 ## 5. 기능 목록
 
+TODO
 
 ---
 ## 6. 파일 구조
 
+TODO
 
 ---
 ## 7. 데이터 파일 설명 
-> `state.json` 경로/역할/스키마
+> `${project_root}/data/state.json` 경로/역할/스키마
+
+### 7.1 스키마
+TODO
+
+### 7.2 세부사항
+TODO
 
 ---
 
