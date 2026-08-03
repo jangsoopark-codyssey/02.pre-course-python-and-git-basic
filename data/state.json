@@ -1,5 +1,23 @@
 {
-    "quiz": [
+    "application": {
+        "title": "세계 상식 퀴즈",
+        "menu": {
+            "title": "세계 상식 퀴즈",
+            "options": [
+                "퀴즈 풀기",
+                "퀴즈 추가",
+                "퀴즈 목록", 
+                "점수 확인",
+                "종료"
+            ],
+            "prompt": ">> "
+        },
+        "highest_score": 0,
+        "last_score": 0,
+        "version": "1.0.0"
+    },
+
+    "quizzes": [
         {
         "category": "국가와 수도",
         "question": "프랑스의 수도는 어디입니까?",

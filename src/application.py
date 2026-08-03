@@ -1,9 +1,14 @@
+from game import quiz
+
 
 class Application(object):
     def __init__(self, name, **params):
         self._name = name
         self._menu = params.get('menu')
         self._divider_width = params.get('divider_width', 50)
+        self._quizzes = params.get('quizzes', [])
+
+        self.quiz_game = quiz.QuizGame(self._quizzes)
 
     def menu(self):
         # Title 
@@ -27,17 +32,20 @@ class Application(object):
 
     def run(self):
         _running = True
+
         while _running: 
             choice = self.menu()
+            print()
+
             match choice:
                 case 1:
-                    print("1")
+                    self.quiz_game.quiz_solve()
                 case 2:
-                    print("2")
+                    self.quiz_game.quiz_add()
                 case 3:
-                    print('3')
+                    self.quiz_game.quiz_list()
                 case 4:
-                    print("4")
+                    self.quiz_game.highest_score_show()
                 case 5:
                     _running = False
                 case _:
