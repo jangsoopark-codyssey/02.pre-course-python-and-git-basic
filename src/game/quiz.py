@@ -21,6 +21,8 @@ class QuizGame(object):
     def quiz_solve(self, num_questions=5):
         print(f"퀴즈를 시작합니다! (총 {num_questions}문제)")
         score = 0
+
+        # TODO: Handling Interrupt (Ctrl+C) and EOFError (Ctrl+D)
         for i in range(num_questions):
             quiz = self.quizzes[i]
             print(f"문제 {i + 1}: {quiz.question}")
@@ -35,6 +37,7 @@ class QuizGame(object):
                 print(f"오답입니다! 정답은 '{quiz.answer}'입니다.")
 
             print()  # Print a newline for better readability between questions
+            
         print(
             f"퀴즈가 종료되었습니다.\n"
             f"당신의 점수는 {score}/{num_questions}입니다."
@@ -49,6 +52,7 @@ class QuizGame(object):
         print(f"새로운 퀴즈를 추가합니다.")
         quiz.question  = input("질문을 입력하세요: ")
         
+        # TODO: Handling Interrupt (Ctrl+C) and EOFError (Ctrl+D)
         for i in range(4):
             choice = input(f"선택지 {i + 1}를 입력하세요: ")
             quiz.choices.append(choice)
