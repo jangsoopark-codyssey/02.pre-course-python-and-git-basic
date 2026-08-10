@@ -23,8 +23,13 @@ class QuizGame(object):
         print(f"퀴즈를 시작합니다! (총 {num_questions}문제)")
         score = 0
         
+        num_questions = min(num_questions, len(self.quizzes))
+        if not len(self.quizzes):
+            print("등록된 퀴즈가 없습니다. 퀴즈를 추가해주세요.")
+            return
+            
         i = 0
-        while i < num_questions and i < len(self.quizzes):
+        while i < num_questions:
             
             quiz = self.quizzes[i]
             print(f"문제 {i + 1}: {quiz.question}")
