@@ -158,5 +158,6 @@ TODO
 
 TODO
 - [ ] Implementation
-- [ ] README
+- [ ] Refactoring
 - [ ] BONUS 
+- [ ] README
