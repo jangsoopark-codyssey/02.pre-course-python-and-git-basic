@@ -41,7 +41,6 @@ def main():
         )
     )
     
-    # TODO: Default values for app_config and quizzes if they are not present in the configs
     app_config = configs.get('application', {})
     quizzes = configs.get('quizzes', [])
     
