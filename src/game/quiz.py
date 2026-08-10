@@ -20,14 +20,16 @@ class QuizGame(object):
     # Quiz Method
     # --------------------------------------------------------------------------------------------------------------------------
     def quiz_solve(self, num_questions=5):
-        print(f"퀴즈를 시작합니다! (총 {num_questions}문제)")
-        score = 0
         
-        num_questions = min(num_questions, len(self.quizzes))
         if not len(self.quizzes):
             print("등록된 퀴즈가 없습니다. 퀴즈를 추가해주세요.")
             return
-            
+
+        num_questions = min(num_questions, len(self.quizzes))
+
+        print(f"퀴즈를 시작합니다! (총 {num_questions}문제)")
+        score = 0
+        
         i = 0
         while i < num_questions:
             
@@ -45,9 +47,11 @@ class QuizGame(object):
                 continue
             except KeyboardInterrupt:
                 # Ignore the interrupt and proceed to the current question
+                print("\nCtrl+C 입력은 사용할 수 없습니다. 다시 입력해주세요.")
                 continue
             except EOFError:
                 # Ignore the EOF and proceed to the current question
+                print("\n입력이 종료되었습니다. 다시 입력해주세요.")
                 continue
 
             # Print Result
@@ -156,6 +160,10 @@ class QuizGame(object):
         print("퀴즈가 추가되었습니다.")
 
     def quiz_list(self):
+        if not self.quizzes:
+            print("등록된 퀴즈가 없습니다.")
+            return
+
         print(f"등록된 퀴즈 목록: 총 {len(self.quizzes)}문제")
         for i, quiz in enumerate(self.quizzes):
             print(f"{i + 1}. {quiz.question}")
