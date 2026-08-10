@@ -33,6 +33,7 @@ def parse_args():
 def main():
     args = parse_args()
     
+    definitions.initialize(os.path.join(definitions.project_root, 'data', os.getenv('DATA_FILE_NAME')))
     configs = json.load(
         open(
             os.path.join(definitions.project_root, 'data', os.getenv('DATA_FILE_NAME')), 
