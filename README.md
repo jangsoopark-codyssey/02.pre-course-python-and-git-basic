@@ -157,7 +157,7 @@ TODO
 ---
 
 TODO
-- [x] Implementation
+- [x] Implementation - 기본 요구사항
 - [ ] Refactoring -> New branch: refactoring
 - [ ] BONUS -> New branch: bonux
 - [ ] README -> New branch: readme
