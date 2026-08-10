@@ -34,12 +34,22 @@ def main():
     args = parse_args()
     
     definitions.initialize(os.path.join(definitions.project_root, 'data', os.getenv('DATA_FILE_NAME')))
-    configs = json.load(
-        open(
-            os.path.join(definitions.project_root, 'data', os.getenv('DATA_FILE_NAME')), 
-            mode='r', encoding='utf-8'
+    # TODO: Refactoring - with New Branch
+    try:
+        configs = json.load(
+            open(
+                os.path.join(definitions.project_root, 'data', os.getenv('DATA_FILE_NAME')), 
+                mode='r', encoding='utf-8'
+            )
         )
-    )
+    except JSONDecodeError as e:
+        definitions.initialize(os.path.join(definitions.project_root, 'data', os.getenv('DATA_FILE_NAME')))
+        configs = json.load(
+            open(
+                os.path.join(definitions.project_root, 'data', os.getenv('DATA_FILE_NAME')), 
+                mode='r', encoding='utf-8'
+            )
+        )
     
     app_config = configs.get('application', {})
     quizzes = configs.get('quizzes', [])
