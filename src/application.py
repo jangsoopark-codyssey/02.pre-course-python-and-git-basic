@@ -7,8 +7,10 @@ class Application(object):
         self._menu = params.get('menu')
         self._divider_width = params.get('divider_width', 50)
         self._quizzes = params.get('quizzes', [])
+        self._highest_score = params.get('best_score', 0)
+        self._state_path = params.get('state_path')
 
-        self.quiz_game = quiz.QuizGame(self._quizzes)
+        self.quiz_game = quiz.QuizGame(self._quizzes, self._highest_score, self._state_path)
 
     def menu(self):
         # Title 

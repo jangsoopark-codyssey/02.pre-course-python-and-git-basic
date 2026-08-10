@@ -9,10 +9,13 @@ max_num_choices = 4
 
 
 def initialize(path):
-    
-    if not os.path.exists(os.path.dirname(path)):
-        os.makedirs(os.path.dirname(path))
+    if os.path.exists(path):
+        return
 
     with open(path, 'w', encoding='utf-8') as f:
-        json.dump(constants.DEFAULT_DATA, f, ensure_ascii=False, indent=4)
-    
+        json.dump(
+            constants.DEFAULT_DATA,
+            f,
+            ensure_ascii=False,
+            indent=4
+        )

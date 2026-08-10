@@ -32,33 +32,44 @@ def parse_args():
 
 def main():
     args = parse_args()
-    
-    definitions.initialize(os.path.join(definitions.project_root, 'data', os.getenv('DATA_FILE_NAME')))
+
+    state_path = os.path.join(
+        definitions.project_root,
+        'data',
+        os.getenv('DATA_FILE_NAME')
+    )
+
+    definitions.initialize(state_path)
     # TODO: Refactoring - with New Branch
     try:
         configs = json.load(
             open(
-                os.path.join(definitions.project_root, 'data', os.getenv('DATA_FILE_NAME')), 
+                state_path, 
                 mode='r', encoding='utf-8'
             )
         )
     except json.JSONDecodeError as e:
-        definitions.initialize(os.path.join(definitions.project_root, 'data', os.getenv('DATA_FILE_NAME')))
+        definitions.initialize(state_path)
         configs = json.load(
             open(
-                os.path.join(definitions.project_root, 'data', os.getenv('DATA_FILE_NAME')), 
+                state_path, 
                 mode='r', encoding='utf-8'
             )
         )
     
     app_config = configs.get('application', {})
     quizzes = configs.get('quizzes', [])
+    best_score = configs.get('best_score', 0)
+
     
     # Initialize the application with the loaded configurations
     app = application.Application(
         name=app_config.get('title'),
         menu=app_config.get('menu'),
         quizzes=quizzes,
+        best_score=best_score,
+        state_path=state_path,
+
     )
     
     # Run the application

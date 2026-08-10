@@ -1,5 +1,7 @@
 from common import definitions
 
+import json
+
 
 class Quiz(object):
     def __init__(self, question, choices, answer):
@@ -9,12 +11,13 @@ class Quiz(object):
 
 
 class QuizGame(object):
-    def __init__(self, quizzes):
+    def __init__(self, quizzes, highest_score, state_path=None):
         self.quizzes = [
             Quiz(question=quiz['question'], choices=quiz['choices'], answer=quiz['answer']) 
             for quiz in quizzes
         ]
-        self.highest_score = 0
+        self.highest_score = highest_score
+        self.state_path = state_path
 
     # --------------------------------------------------------------------------------------------------------------------------
     # Quiz Method
@@ -156,6 +159,7 @@ class QuizGame(object):
                 continue
 
         self.quizzes.append(quiz)
+        self.save()  # Save the updated quizzes to the state file
 
         print("퀴즈가 추가되었습니다.")
 
@@ -175,7 +179,36 @@ class QuizGame(object):
     def highest_score_update(self, score):
         if score > self.highest_score:
             self.highest_score = score
-            print(f"최고 점수가 갱신되었습니다! 새로운 최고 점수: {self.highest_score}")
+            
+            self.save()  # Save the updated score to the state file
+
+            print(
+                f"최고 점수가 갱신되었습니다! "
+                f"새로운 최고 점수: {self.highest_score}"
+            )
 
     def highest_score_show(self):
         print(f"현재 최고 점수: {self.highest_score}")
+
+
+    # TODO: Refactoring - with New Branch
+    def save(self):
+        data = {
+            "quizzes": [
+                {
+                    "question": quiz.question,
+                    "choices": quiz.choices,
+                    "answer": quiz.answer
+                }
+                for quiz in self.quizzes
+            ],
+            "best_score": self.highest_score
+        }
+
+        with open(self.state_path, 'w', encoding='utf-8') as f:
+            json.dump(
+                data,
+                f,
+                ensure_ascii=False,
+                indent=4
+            )
