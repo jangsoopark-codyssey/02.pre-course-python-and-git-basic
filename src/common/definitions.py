@@ -8,11 +8,12 @@ project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(_
 max_num_choices = 4
 
 
-def initialize(path):
-    if os.path.exists(path):
+def initialize(path, force=False):
+    if os.path.exists(path) and not force:
         return
 
     os.makedirs(os.path.dirname(path), exist_ok=True)
+
     with open(path, 'w', encoding='utf-8') as f:
         json.dump(
             constants.DEFAULT_DATA,
