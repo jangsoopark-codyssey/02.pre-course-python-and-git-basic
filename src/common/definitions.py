@@ -12,6 +12,7 @@ def initialize(path):
     if os.path.exists(path):
         return
 
+    os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, 'w', encoding='utf-8') as f:
         json.dump(
             constants.DEFAULT_DATA,

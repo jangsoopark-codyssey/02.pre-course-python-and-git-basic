@@ -49,11 +49,15 @@ def main():
             )
         )
     except json.JSONDecodeError as e:
-        definitions.initialize(state_path)
+        print("데이터 파일이 손상되었습니다. 기본 데이터로 복구합니다.")
+
+        definitions.initialize(state_path, force=True)
+
         configs = json.load(
             open(
-                state_path, 
-                mode='r', encoding='utf-8'
+                state_path,
+                mode='r',
+                encoding='utf-8'
             )
         )
     
