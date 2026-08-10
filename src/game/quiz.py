@@ -1,3 +1,4 @@
+from common import definitions
 
 
 class Quiz(object):
@@ -67,10 +68,19 @@ class QuizGame(object):
         print(f"새로운 퀴즈를 추가합니다.")
         quiz.question  = input("질문을 입력하세요: ")
         
-        # TODO: Handling Interrupt (Ctrl+C) and EOFError (Ctrl+D)
-        for i in range(4):
-            choice = input(f"선택지 {i + 1}를 입력하세요: ")
+        i = 0
+        while i < definitions.max_num_choices:
+            try:
+                choice = input(f"선택지 {i + 1}를 입력하세요: ")
+            except KeyboardInterrupt:
+                # Ignore the interrupt and proceed 
+                continue
+            except EOFError:
+                # Ignore the EOF and proceed 
+                continue
             quiz.choices.append(choice)
+            i += 1
+
         quiz.answer = input("정답을 입력하세요: ")        
 
         self.quizzes.append(quiz)
