@@ -21,8 +21,7 @@ class QuizGame(object):
     def quiz_solve(self, num_questions=5):
         print(f"퀴즈를 시작합니다! (총 {num_questions}문제)")
         score = 0
-
-        # TODO: Handling Interrupt (Ctrl+C) and EOFError (Ctrl+D)
+        
         i = 0
         while i < num_questions and i < len(self.quizzes):
             
