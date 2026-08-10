@@ -28,11 +28,13 @@ class Application(object):
         except ValueError:
             return -1
         except KeyboardInterrupt:
-            # Ignore the interrupt and proceed to the current question
-            continue
+            # Handle Ctrl+C as an invalid menu input
+            print("\nCtrl+C 입력은 사용할 수 없습니다. 종료 메뉴를 이용해주세요.")
+            return -1
         except EOFError:
-            # Ignore the EOF and proceed to the current question
-            continue
+            # Handle EOF (Ctrl+D) as an invalid menu input
+            print("\n입력이 종료되었습니다. 종료하려면 종료 메뉴를 이용해주세요.")
+            return -1
 
     def run(self):
         _running = True
@@ -53,5 +55,5 @@ class Application(object):
                 case 5:
                     _running = False
                 case _:
-                    print("\n\n 잘못된 입력입니다. 1~5 사이의 숫자를 입력해주세요. \n\n")
+                    print("\n1~5 사이의 숫자를 다시 입력해주세요. \n")
                     
