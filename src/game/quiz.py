@@ -20,7 +20,7 @@ class QuizGame(object):
     # Quiz Method
     # --------------------------------------------------------------------------------------------------------------------------
     def quiz_solve(self, num_questions=5):
-        
+        # TODO: Refactoring - with New Branch 
         if not len(self.quizzes):
             print("등록된 퀴즈가 없습니다. 퀴즈를 추가해주세요.")
             return
@@ -160,6 +160,7 @@ class QuizGame(object):
         print("퀴즈가 추가되었습니다.")
 
     def quiz_list(self):
+        # TODO: Refactoring - with New Branch 
         if not self.quizzes:
             print("등록된 퀴즈가 없습니다.")
             return
