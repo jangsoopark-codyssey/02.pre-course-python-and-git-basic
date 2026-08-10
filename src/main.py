@@ -10,20 +10,35 @@ import os
 
 
 # Load environment variables from .env file
-dotenv.load_dotenv(path=os.path.join(definitions.project_root, 'data', ".env"), override=True)
+dotenv.load_dotenv(
+    path=os.path.join(definitions.project_root, 'data', ".env"),
+    override=True
+)
 
 
 def parse_args():
-    
-    parser = argparse.ArgumentParser(description="Process some integers.")
-    parser.add_argument('--data-file-path', type=str, help='Path to the data file')
-    parser.add_argument('--data-file-name', type=str, help='Name of the data file')
+    parser = argparse.ArgumentParser(
+        description="Process some integers."
+    )
+
+    parser.add_argument(
+        '--data-file-path',
+        type=str,
+        help='Path to the data file'
+    )
+
+    parser.add_argument(
+        '--data-file-name',
+        type=str,
+        help='Name of the data file'
+    )
 
     args = parser.parse_args()
 
     # Set environment variables based on command-line arguments
     if args.data_file_path:
         os.environ['DATA_FILE_PATH'] = args.data_file_path
+
     if args.data_file_name:
         os.environ['DATA_FILE_NAME'] = args.data_file_name
 
@@ -39,19 +54,31 @@ def main():
         os.getenv('DATA_FILE_NAME')
     )
 
-    definitions.initialize(state_path)
+    # Initialize the data file if it does not exist
+    if not definitions.initialize(state_path):
+        return 1
+
     # TODO: Refactoring - with New Branch
     try:
         configs = json.load(
             open(
-                state_path, 
-                mode='r', encoding='utf-8'
+                state_path,
+                mode='r',
+                encoding='utf-8'
             )
         )
-    except json.JSONDecodeError as e:
-        print("데이터 파일이 손상되었습니다. 기본 데이터로 복구합니다.")
 
-        definitions.initialize(state_path, force=True)
+    except json.JSONDecodeError as e:
+        print(
+            "데이터 파일이 손상되었습니다. "
+            "기본 데이터로 복구합니다."
+        )
+
+        if not definitions.initialize(
+            state_path,
+            force=True
+        ):
+            return 1
 
         configs = json.load(
             open(
@@ -60,12 +87,17 @@ def main():
                 encoding='utf-8'
             )
         )
-    
+
+    except OSError as e:
+        print(
+            f"데이터 파일을 읽는 중 오류가 발생했습니다: {e}"
+        )
+        return 1
+
     app_config = configs.get('application', {})
     quizzes = configs.get('quizzes', [])
     best_score = configs.get('best_score', 0)
 
-    
     # Initialize the application with the loaded configurations
     app = application.Application(
         name=app_config.get('title'),
@@ -73,9 +105,8 @@ def main():
         quizzes=quizzes,
         best_score=best_score,
         state_path=state_path,
-
     )
-    
+
     # Run the application
     app.run()
 

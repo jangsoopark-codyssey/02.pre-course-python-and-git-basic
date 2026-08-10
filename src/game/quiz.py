@@ -165,7 +165,7 @@ class QuizGame(object):
 
     def quiz_list(self):
         # TODO: Refactoring - with New Branch 
-        if not self.quizzes:
+        if not len(self.quizzes):
             print("등록된 퀴즈가 없습니다.")
             return
 
@@ -205,10 +205,14 @@ class QuizGame(object):
             "best_score": self.highest_score
         }
 
-        with open(self.state_path, 'w', encoding='utf-8') as f:
-            json.dump(
-                data,
-                f,
-                ensure_ascii=False,
-                indent=4
-            )
+        try:
+            with open(self.state_path, 'w', encoding='utf-8') as f:
+                json.dump(
+                    data,
+                    f,
+                    ensure_ascii=False,
+                    indent=4
+                )
+
+        except OSError as e:
+            print(f"데이터 파일을 저장하는 중 오류가 발생했습니다: {e}")
