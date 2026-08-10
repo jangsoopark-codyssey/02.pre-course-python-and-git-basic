@@ -33,9 +33,9 @@ class QuizGame(object):
             
             try:
                 answer = int(input("\n정답을 입력하세요 (1-4): ").strip())
-            except ValueError:
-                print("잘못된 입력입니다. 1~4 사이의 숫자를 입력해주세요.")
-                continue
+                if answer < 1 or answer > 4:
+                    print("잘못된 입력입니다. 1~4 사이의 숫자를 입력해주세요.")
+                    continue 
             except KeyboardInterrupt:
                 # Ignore the interrupt and proceed to the current question
                 continue
@@ -62,26 +62,87 @@ class QuizGame(object):
         self.highest_score_update(score)
 
     def quiz_add(self):
-        
-        quiz = Quiz(question=question, answer="")
-        
-        print(f"새로운 퀴즈를 추가합니다.")
-        quiz.question  = input("질문을 입력하세요: ")
-        
+        print("새로운 퀴즈를 추가합니다.")
+
+        quiz = Quiz(question="", choices=[], answer="")
+
+        # Question
+        while True:
+            try:
+                quiz.question = input("질문을 입력하세요: ").strip()
+
+                if not quiz.question:
+                    print("질문을 입력해주세요.")
+                    continue
+
+                break
+
+            except KeyboardInterrupt:
+                # Ignore the interrupt and proceed
+                print("\nCtrl+C 입력은 사용할 수 없습니다.")
+                continue
+
+            except EOFError:
+                # Ignore the EOF and proceed
+                print("\n입력이 종료되었습니다. 다시 입력해주세요.")
+                continue
+
+        # Choices
         i = 0
         while i < definitions.max_num_choices:
             try:
-                choice = input(f"선택지 {i + 1}를 입력하세요: ")
+                choice = input(f"선택지 {i + 1}를 입력하세요: ").strip()
+
+                if not choice:
+                    print("선택지를 입력해주세요.")
+                    continue
+
             except KeyboardInterrupt:
-                # Ignore the interrupt and proceed 
+                # Ignore the interrupt and proceed
+                print("\nCtrl+C 입력은 사용할 수 없습니다.")
                 continue
+
             except EOFError:
-                # Ignore the EOF and proceed 
+                # Ignore the EOF and proceed
+                print("\n입력이 종료되었습니다. 다시 입력해주세요.")
                 continue
+
             quiz.choices.append(choice)
             i += 1
 
-        quiz.answer = input("정답을 입력하세요: ")        
+        # TODO: Refactoring - with New Branch
+        while True:
+            try:
+                quiz.answer = int(
+                    input(
+                        f"정답을 입력하세요 (1-{definitions.max_num_choices}): "
+                    ).strip()
+                )
+
+                if quiz.answer < 1 or quiz.answer > definitions.max_num_choices:
+                    print(
+                        f"잘못된 입력입니다. "
+                        f"1~{definitions.max_num_choices} 사이의 숫자를 입력해주세요."
+                    )
+                    continue
+
+                break
+
+            except ValueError:
+                print(
+                    f"잘못된 입력입니다. "
+                    f"1~{definitions.max_num_choices} 사이의 숫자를 입력해주세요."
+                )
+
+            except KeyboardInterrupt:
+                # Ignore the interrupt and proceed
+                print("\nCtrl+C 입력은 사용할 수 없습니다.")
+                continue
+
+            except EOFError:
+                # Ignore the EOF and proceed
+                print("\n입력이 종료되었습니다. 다시 입력해주세요.")
+                continue
 
         self.quizzes.append(quiz)
 

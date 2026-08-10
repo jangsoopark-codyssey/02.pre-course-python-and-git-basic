@@ -42,7 +42,7 @@ def main():
                 mode='r', encoding='utf-8'
             )
         )
-    except JSONDecodeError as e:
+    except json.JSONDecodeError as e:
         definitions.initialize(os.path.join(definitions.project_root, 'data', os.getenv('DATA_FILE_NAME')))
         configs = json.load(
             open(
