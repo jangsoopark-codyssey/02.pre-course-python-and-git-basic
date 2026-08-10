@@ -23,20 +23,36 @@ class QuizGame(object):
         score = 0
 
         # TODO: Handling Interrupt (Ctrl+C) and EOFError (Ctrl+D)
-        for i in range(num_questions):
+        i = 0
+        while i < num_questions and i < len(self.quizzes):
+            
             quiz = self.quizzes[i]
             print(f"문제 {i + 1}: {quiz.question}")
             for j, choice in enumerate(quiz.choices):
                 print(f"{j + 1}. {choice}")
             
-            answer = int(input("\n정답을 입력하세요 (1-4): ").strip())
+            try:
+                answer = int(input("\n정답을 입력하세요 (1-4): ").strip())
+            except ValueError:
+                print("잘못된 입력입니다. 1~4 사이의 숫자를 입력해주세요.")
+                continue
+            except KeyboardInterrupt:
+                # Ignore the interrupt and proceed to the current question
+                continue
+            except EOFError:
+                # Ignore the EOF and proceed to the current question
+                continue
+
+            # Print Result
             if answer == quiz.answer:
                 print("정답입니다!")
                 score += 1
             else:
                 print(f"오답입니다! 정답은 '{quiz.answer}'입니다.")
-
             print()  # Print a newline for better readability between questions
+
+            # Increment the question index only if the answer was valid (1-4)
+            i += 1
             
         print(
             f"퀴즈가 종료되었습니다.\n"

@@ -28,7 +28,11 @@ class Application(object):
         except ValueError:
             return -1
         except KeyboardInterrupt:
-            pass
+            # Ignore the interrupt and proceed to the current question
+            continue
+        except EOFError:
+            # Ignore the EOF and proceed to the current question
+            continue
 
     def run(self):
         _running = True
