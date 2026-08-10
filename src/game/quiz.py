@@ -34,8 +34,10 @@ class QuizGame(object):
             try:
                 answer = int(input("\n정답을 입력하세요 (1-4): ").strip())
                 if answer < 1 or answer > 4:
-                    print("잘못된 입력입니다. 1~4 사이의 숫자를 입력해주세요.")
-                    continue 
+                    raise ValueError("정답은 1~4 사이의 숫자여야 합니다.")
+            except ValueError:
+                print("잘못된 입력입니다. 1~4 사이의 숫자를 입력해주세요.")
+                continue
             except KeyboardInterrupt:
                 # Ignore the interrupt and proceed to the current question
                 continue
