@@ -157,7 +157,7 @@ TODO
 ---
 
 TODO
-- [ ] Implementation
+- [x] Implementation
 - [ ] Refactoring -> New branch: refactoring
 - [ ] BONUS -> New branch: bonux
 - [ ] README -> New branch: readme
