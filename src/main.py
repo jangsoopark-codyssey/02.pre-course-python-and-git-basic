@@ -1,24 +1,30 @@
+# main.py
+
 from common import definitions
 from common import dotenv
+from common import utils
 
 import application
 
 import argparse
-import json
-import sys
 import os
+import sys
 
 
 # Load environment variables from .env file
 dotenv.load_dotenv(
-    path=os.path.join(definitions.project_root, 'data', ".env"),
+    path=os.path.join(
+        definitions.project_root,
+        'data',
+        '.env'
+    ),
     override=True
 )
 
 
 def parse_args():
     parser = argparse.ArgumentParser(
-        description="Process some integers."
+        description="Quiz game"
     )
 
     parser.add_argument(
@@ -42,63 +48,27 @@ def parse_args():
     if args.data_file_name:
         os.environ['DATA_FILE_NAME'] = args.data_file_name
 
-    return args
-
 
 def main():
-    args = parse_args()
+    parse_args()
 
     state_path = os.path.join(
         definitions.project_root,
-        'data',
+        os.getenv('DATA_FILE_PATH'),
         os.getenv('DATA_FILE_NAME')
     )
 
-    # Initialize the data file if it does not exist
-    if not definitions.initialize(state_path):
-        return 1
+    # Load state from the data file
+    configs = utils.load_state(state_path)
 
-    # TODO: Refactoring - with New Branch
-    try:
-        configs = json.load(
-            open(
-                state_path,
-                mode='r',
-                encoding='utf-8'
-            )
-        )
-
-    except json.JSONDecodeError as e:
-        print(
-            "데이터 파일이 손상되었습니다. "
-            "기본 데이터로 복구합니다."
-        )
-
-        if not definitions.initialize(
-            state_path,
-            force=True
-        ):
-            return 1
-
-        configs = json.load(
-            open(
-                state_path,
-                mode='r',
-                encoding='utf-8'
-            )
-        )
-
-    except OSError as e:
-        print(
-            f"데이터 파일을 읽는 중 오류가 발생했습니다: {e}"
-        )
+    if configs is None:
         return 1
 
     app_config = configs.get('application', {})
     quizzes = configs.get('quizzes', [])
     best_score = configs.get('best_score', 0)
 
-    # Initialize the application with the loaded configurations
+    # Initialize the application
     app = application.Application(
         name=app_config.get('title'),
         menu=app_config.get('menu'),
