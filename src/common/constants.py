@@ -10,15 +10,18 @@ DEFAULT_DATA = {
                 "퀴즈 목록",
                 "퀴즈 삭제",
                 "점수 확인",
+                "점수 기록",
                 "종료"
             ],
             "prompt": ">> "
         },
-        "highest_score": 0,
-        "last_score": 0,
         "version": "2.0.0"
     },
-
+    "score": {
+        "last": 0,
+        "best": 0,
+        "history": []
+    },
     "quizzes": [
         {
             "category": "국가와 수도",

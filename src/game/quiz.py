@@ -3,6 +3,8 @@
 from common import definitions
 from common import utils
 
+from datetime import datetime
+
 import random
 
 
@@ -51,7 +53,7 @@ class QuizGame(object):
     def __init__(
         self,
         quizzes,
-        highest_score,
+        score,
         state_path=None
     ):
         self.quizzes = [
@@ -65,7 +67,7 @@ class QuizGame(object):
             for quiz in quizzes
         ]
 
-        self.highest_score = highest_score
+        self.score = score
         self.state_path = state_path
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -145,7 +147,10 @@ class QuizGame(object):
             f"{score}/{num_questions}입니다."
         )
 
-        self.highest_score_update(score)
+        self.score_update(
+            score=score,
+            num_questions=num_questions
+        )
 
     def quiz_add(self):
         print("새로운 퀴즈를 추가합니다.")
@@ -242,25 +247,70 @@ class QuizGame(object):
     # Score Method
     # ------------------------------------------------------------------------------------------------------------------
 
-    def highest_score_update(self, score):
-        if score <= self.highest_score:
-            return
+    def score_update(
+        self,
+        score,
+        num_questions
+    ):
+        self.score['last'] = score
 
-        self.highest_score = score
+        if score > self.score.get('best', 0):
+            self.score['best'] = score
+
+            print(
+                f"최고 점수가 갱신되었습니다! "
+                f"새로운 최고 점수: "
+                f"{self.score['best']}"
+            )
+
+        history = self.score.setdefault(
+            'history',
+            []
+        )
+
+        history.append(
+            {
+                "datetime": datetime.now().strftime(
+                    "%Y-%m-%d %H:%M:%S"
+                ),
+                "num_questions": num_questions,
+                "score": score
+            }
+        )
 
         self.save()
 
+    def score_show(self):
         print(
-            f"최고 점수가 갱신되었습니다! "
-            f"새로운 최고 점수: "
-            f"{self.highest_score}"
+            f"최근 점수: {self.score.get('last', 0)}"
+        )
+        print(
+            f"최고 점수: {self.score.get('best', 0)}"
         )
 
-    def highest_score_show(self):
-        print(
-            f"현재 최고 점수: "
-            f"{self.highest_score}"
+
+    def score_history_show(self):
+        history = self.score.get(
+            'history',
+            []
         )
+
+        if not history:
+            print("점수 기록이 없습니다.")
+            return
+
+        print(f"점수 기록: 총 {len(history)}개")
+
+        for i, record in enumerate(
+            history,
+            start=1
+        ):
+            print(
+                f"{i}. "
+                f"{record['datetime']} | "
+                f"{record['score']}/"
+                f"{record['num_questions']}"
+            )
 
     # ------------------------------------------------------------------------------------------------------------------
     # State Method
@@ -281,5 +331,5 @@ class QuizGame(object):
         utils.update_state(
             self.state_path,
             quizzes=quizzes,
-            best_score=self.highest_score
+            score=self.score
         )
