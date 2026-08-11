@@ -633,6 +633,20 @@ cd scripts
 ![KeyboardInterrupt 처리](assets/figure/25.unexpected-input.png)
 
 </details>
+<details>
+
+<summary> Screenshot </summary>
+
+![잘못된 입력 처리2](assets/figure/25.unexpected-input.png)
+
+</details>
+
+<details>
+<summary> Screenshot </summary>
+
+![읽기 쓰기 오류](assets/figure/30.oserror.png)
+
+</details>
 
 
 ### 8.8 데이터 파일 예외 처리
@@ -730,7 +744,7 @@ git log --oneline --graph --all --decorate
 <summary> Screenshot </summary>
 
 ![pull](assets/figure/11.git-pull.png)
-![자동화 테스트](assets/figure/12.git-log.png)
+![로그](assets/figure/12.git-log.png)
 
 </details>
 

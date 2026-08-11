@@ -68,8 +68,8 @@ def load_state(path):
 
     except OSError as e:
         print(
-            f"데이터 파일을 읽는 중 "
-            f"오류가 발생했습니다: {e}"
+            f"데이터 파일을 읽는 중 오류가 발생했습니다: {e}\n"
+            "파일 경로와 접근 권한을 확인한 후 다시 실행해주세요."
         )
         return None
 
