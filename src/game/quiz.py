@@ -1,6 +1,8 @@
 from common import definitions
 from common import utils
 
+import random
+
 
 class Quiz(object):
 
@@ -41,14 +43,21 @@ class QuizGame(object):
     # Quiz Method
     # ----------------------------------------------------------------------------------------------------------------------
 
-    def quiz_solve(self, num_questions=5):
+    def quiz_solve(self):
         if not self.quizzes:
             print("등록된 퀴즈가 없습니다. 퀴즈를 추가해주세요.")
             return
 
-        num_questions = min(
-            num_questions,
+        num_questions = utils.input_number(
+            f"풀 문제 수를 입력하세요 "
+            f"(1-{len(self.quizzes)}): ",
+            1,
             len(self.quizzes)
+        )
+
+        selected_quizzes = random.sample(
+            self.quizzes,
+            num_questions
         )
 
         print(
@@ -59,7 +68,7 @@ class QuizGame(object):
         score = 0
 
         for i, quiz in enumerate(
-            self.quizzes[:num_questions],
+            selected_quizzes,
             start=1
         ):
             quiz.show(i)
@@ -74,7 +83,6 @@ class QuizGame(object):
             if quiz.is_correct(answer):
                 print("정답입니다!")
                 score += 1
-
             else:
                 print(
                     f"오답입니다! "
