@@ -700,9 +700,9 @@ git log --oneline --graph --all --decorate
 
 <summary> Screenshot </summary>
 
-![자동화 테스트](assets/figure/01.git-init.png)
-![자동화 테스트](assets/figure/02.git-repo.png)
-![자동화 테스트](assets/figure/04.basic-master-git-log.png)
+![git 저장소 초기화](assets/figure/01.git-init.png)
+![git 원격 저장소 초기 설정](assets/figure/02.git-init-repo.png)
+![기본 기능 구현 및 커밋 이력](assets/figure/04.basic-master-git-log.png)
 
 </details>
 
@@ -710,9 +710,9 @@ git log --oneline --graph --all --decorate
 
 <summary> Screenshot </summary>
 
-![자동화 테스트](assets/figure/05.git-branch-checkout.png)
-![자동화 테스트](assets/figure/06.git-branch-merge-refactoring.png)
-![자동화 테스트](assets/figure/07.git-branch-merge-bonus.png)
+![브랜치 생성 및 전환](assets/figure/05.git-branch-checkout.png)
+![브랜치 병합](assets/figure/06.git-branch-merge-refactoring.png)
+![브랜치 생성, 병합](assets/figure/07.git-branch-merge-bonus.png)
 
 </details>
 
@@ -720,8 +720,8 @@ git log --oneline --graph --all --decorate
 
 <summary> Screenshot </summary>
 
-![자동화 테스트](assets/figure/10.git-fork-clone-1.png)
-![자동화 테스트](assets/figure/10.git-fork-clone-2.png)
+![clone1](assets/figure/10.git-fork-clone-1.png)
+![clone2](assets/figure/10.git-fork-clone-2.png)
 
 </details>
 
@@ -729,7 +729,7 @@ git log --oneline --graph --all --decorate
 
 <summary> Screenshot </summary>
 
-![자동화 테스트](assets/figure/11.git-pull.png)
+![pull](assets/figure/11.git-pull.png)
 ![자동화 테스트](assets/figure/12.git-log.png)
 
 </details>
