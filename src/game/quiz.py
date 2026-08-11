@@ -1,76 +1,92 @@
 from common import definitions
-
-import json
+from common import utils
 
 
 class Quiz(object):
+
     def __init__(self, question, choices, answer):
         self.question = question
         self.choices = choices
         self.answer = answer
 
+    def show(self, number=None):
+        if number is not None:
+            print(f"문제 {number}: {self.question}")
+        else:
+            print(self.question)
+
+        for i, choice in enumerate(self.choices, start=1):
+            print(f"{i}. {choice}")
+
+    def is_correct(self, answer):
+        return answer == self.answer
+
 
 class QuizGame(object):
+
     def __init__(self, quizzes, highest_score, state_path=None):
         self.quizzes = [
-            Quiz(question=quiz['question'], choices=quiz['choices'], answer=quiz['answer']) 
+            Quiz(
+                question=quiz['question'],
+                choices=quiz['choices'],
+                answer=quiz['answer']
+            )
             for quiz in quizzes
         ]
+
         self.highest_score = highest_score
         self.state_path = state_path
 
-    # --------------------------------------------------------------------------------------------------------------------------
+    # ----------------------------------------------------------------------------------------------------------------------
     # Quiz Method
-    # --------------------------------------------------------------------------------------------------------------------------
+    # ----------------------------------------------------------------------------------------------------------------------
+
     def quiz_solve(self, num_questions=5):
-        # TODO: Refactoring - with New Branch 
-        if not len(self.quizzes):
+        if not self.quizzes:
             print("등록된 퀴즈가 없습니다. 퀴즈를 추가해주세요.")
             return
 
-        num_questions = min(num_questions, len(self.quizzes))
+        num_questions = min(
+            num_questions,
+            len(self.quizzes)
+        )
 
-        print(f"퀴즈를 시작합니다! (총 {num_questions}문제)")
+        print(
+            f"퀴즈를 시작합니다! "
+            f"(총 {num_questions}문제)"
+        )
+
         score = 0
-        
-        i = 0
-        while i < num_questions:
-            
-            quiz = self.quizzes[i]
-            print(f"문제 {i + 1}: {quiz.question}")
-            for j, choice in enumerate(quiz.choices):
-                print(f"{j + 1}. {choice}")
-            
-            try:
-                answer = int(input("\n정답을 입력하세요 (1-4): ").strip())
-                if answer < 1 or answer > 4:
-                    raise ValueError("정답은 1~4 사이의 숫자여야 합니다.")
-            except ValueError:
-                print("잘못된 입력입니다. 1~4 사이의 숫자를 입력해주세요.")
-                continue
-            except KeyboardInterrupt:
-                # Ignore the interrupt and proceed to the current question
-                print("\nCtrl+C 입력은 사용할 수 없습니다. 다시 입력해주세요.")
-                continue
-            except EOFError:
-                # Ignore the EOF and proceed to the current question
-                print("\n입력이 종료되었습니다. 다시 입력해주세요.")
-                continue
 
-            # Print Result
-            if answer == quiz.answer:
+        for i, quiz in enumerate(
+            self.quizzes[:num_questions],
+            start=1
+        ):
+            quiz.show(i)
+
+            answer = utils.input_number(
+                f"\n정답을 입력하세요 "
+                f"(1-{len(quiz.choices)}): ",
+                1,
+                len(quiz.choices)
+            )
+
+            if quiz.is_correct(answer):
                 print("정답입니다!")
                 score += 1
-            else:
-                print(f"오답입니다! 정답은 '{quiz.answer}'입니다.")
-            print()  # Print a newline for better readability between questions
 
-            # Increment the question index only if the answer was valid (1-4)
-            i += 1
-            
+            else:
+                print(
+                    f"오답입니다! "
+                    f"정답은 '{quiz.answer}'입니다."
+                )
+
+            print()
+
         print(
             f"퀴즈가 종료되었습니다.\n"
-            f"당신의 점수는 {score}/{num_questions}입니다."
+            f"당신의 점수는 "
+            f"{score}/{num_questions}입니다."
         )
 
         self.highest_score_update(score)
@@ -78,120 +94,85 @@ class QuizGame(object):
     def quiz_add(self):
         print("새로운 퀴즈를 추가합니다.")
 
-        quiz = Quiz(question="", choices=[], answer="")
+        question = utils.input_text(
+            "질문을 입력하세요: "
+        )
 
-        # Question
-        while True:
-            try:
-                quiz.question = input("질문을 입력하세요: ").strip()
+        choices = [
+            utils.input_text(
+                f"선택지 {i}를 입력하세요: "
+            )
+            for i in range(
+                1,
+                definitions.max_num_choices + 1
+            )
+        ]
 
-                if not quiz.question:
-                    print("질문을 입력해주세요.")
-                    continue
+        answer = utils.input_number(
+            f"정답을 입력하세요 "
+            f"(1-{definitions.max_num_choices}): ",
+            1,
+            definitions.max_num_choices
+        )
 
-                break
-
-            except KeyboardInterrupt:
-                # Ignore the interrupt and proceed
-                print("\nCtrl+C 입력은 사용할 수 없습니다.")
-                continue
-
-            except EOFError:
-                # Ignore the EOF and proceed
-                print("\n입력이 종료되었습니다. 다시 입력해주세요.")
-                continue
-
-        # Choices
-        i = 0
-        while i < definitions.max_num_choices:
-            try:
-                choice = input(f"선택지 {i + 1}를 입력하세요: ").strip()
-
-                if not choice:
-                    print("선택지를 입력해주세요.")
-                    continue
-
-            except KeyboardInterrupt:
-                # Ignore the interrupt and proceed
-                print("\nCtrl+C 입력은 사용할 수 없습니다.")
-                continue
-
-            except EOFError:
-                # Ignore the EOF and proceed
-                print("\n입력이 종료되었습니다. 다시 입력해주세요.")
-                continue
-
-            quiz.choices.append(choice)
-            i += 1
-
-        # TODO: Refactoring - with New Branch
-        while True:
-            try:
-                quiz.answer = int(
-                    input(
-                        f"정답을 입력하세요 (1-{definitions.max_num_choices}): "
-                    ).strip()
-                )
-
-                if quiz.answer < 1 or quiz.answer > definitions.max_num_choices:
-                    print(
-                        f"잘못된 입력입니다. "
-                        f"1~{definitions.max_num_choices} 사이의 숫자를 입력해주세요."
-                    )
-                    continue
-
-                break
-
-            except ValueError:
-                print(
-                    f"잘못된 입력입니다. "
-                    f"1~{definitions.max_num_choices} 사이의 숫자를 입력해주세요."
-                )
-
-            except KeyboardInterrupt:
-                # Ignore the interrupt and proceed
-                print("\nCtrl+C 입력은 사용할 수 없습니다.")
-                continue
-
-            except EOFError:
-                # Ignore the EOF and proceed
-                print("\n입력이 종료되었습니다. 다시 입력해주세요.")
-                continue
+        quiz = Quiz(
+            question=question,
+            choices=choices,
+            answer=answer
+        )
 
         self.quizzes.append(quiz)
-        self.save()  # Save the updated quizzes to the state file
+
+        self.save()
 
         print("퀴즈가 추가되었습니다.")
 
     def quiz_list(self):
-        # TODO: Refactoring - with New Branch 
-        if not len(self.quizzes):
+        if not self.quizzes:
             print("등록된 퀴즈가 없습니다.")
             return
 
-        print(f"등록된 퀴즈 목록: 총 {len(self.quizzes)}문제")
-        for i, quiz in enumerate(self.quizzes):
-            print(f"{i + 1}. {quiz.question}")
+        print(
+            f"등록된 퀴즈 목록: "
+            f"총 {len(self.quizzes)}문제"
+        )
 
-    # --------------------------------------------------------------------------------------------------------------------------
-    # Score Method
-    # --------------------------------------------------------------------------------------------------------------------------
-    def highest_score_update(self, score):
-        if score > self.highest_score:
-            self.highest_score = score
-            
-            self.save()  # Save the updated score to the state file
-
+        for i, quiz in enumerate(
+            self.quizzes,
+            start=1
+        ):
             print(
-                f"최고 점수가 갱신되었습니다! "
-                f"새로운 최고 점수: {self.highest_score}"
+                f"{i}. {quiz.question}"
             )
 
+    # ----------------------------------------------------------------------------------------------------------------------
+    # Score Method
+    # ----------------------------------------------------------------------------------------------------------------------
+
+    def highest_score_update(self, score):
+        if score <= self.highest_score:
+            return
+
+        self.highest_score = score
+
+        self.save()
+
+        print(
+            f"최고 점수가 갱신되었습니다! "
+            f"새로운 최고 점수: "
+            f"{self.highest_score}"
+        )
+
     def highest_score_show(self):
-        print(f"현재 최고 점수: {self.highest_score}")
+        print(
+            f"현재 최고 점수: "
+            f"{self.highest_score}"
+        )
 
+    # ----------------------------------------------------------------------------------------------------------------------
+    # State Method
+    # ----------------------------------------------------------------------------------------------------------------------
 
-    # TODO: Refactoring - with New Branch
     def save(self):
         data = {
             "quizzes": [
@@ -205,14 +186,7 @@ class QuizGame(object):
             "best_score": self.highest_score
         }
 
-        try:
-            with open(self.state_path, 'w', encoding='utf-8') as f:
-                json.dump(
-                    data,
-                    f,
-                    ensure_ascii=False,
-                    indent=4
-                )
-
-        except OSError as e:
-            print(f"데이터 파일을 저장하는 중 오류가 발생했습니다: {e}")
+        utils.save_json_file(
+            self.state_path,
+            data
+        )
