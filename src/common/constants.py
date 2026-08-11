@@ -1,5 +1,4 @@
 
-
 DEFAULT_DATA = {
     "application": {
         "title": "세계 상식 퀴즈",
