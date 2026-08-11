@@ -55,9 +55,12 @@ class Application(object):
                     self._quiz_game.quiz_list()
 
                 case 4:
+                    self._quiz_game.quiz_delete()
+                    
+                case 5:
                     self._quiz_game.highest_score_show()
 
-                case 5:
+                case 6:
                     running = False
 
                 case _:

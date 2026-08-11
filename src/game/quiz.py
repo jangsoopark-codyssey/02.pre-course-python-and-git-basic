@@ -135,6 +135,29 @@ class QuizGame(object):
 
         print("퀴즈가 추가되었습니다.")
 
+    def quiz_delete(self):
+        if not self.quizzes:
+            print("삭제할 퀴즈가 없습니다.")
+            return
+
+        self.quiz_list()
+
+        quiz_number = utils.input_number(
+            f"삭제할 퀴즈 번호를 입력하세요 "
+            f"(1-{len(self.quizzes)}): ",
+            1,
+            len(self.quizzes)
+        )
+
+        deleted_quiz = self.quizzes.pop(quiz_number - 1)
+
+        self.save()
+
+        print(
+            f"퀴즈가 삭제되었습니다: "
+            f"{deleted_quiz.question}"
+        )
+
     def quiz_list(self):
         if not self.quizzes:
             print("등록된 퀴즈가 없습니다.")
