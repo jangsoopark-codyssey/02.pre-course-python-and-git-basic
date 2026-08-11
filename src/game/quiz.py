@@ -1,3 +1,5 @@
+# game/quiz.py
+
 from common import definitions
 from common import utils
 
@@ -6,10 +8,19 @@ import random
 
 class Quiz(object):
 
-    def __init__(self, question, choices, answer):
+    def __init__(
+        self,
+        question,
+        choices,
+        answer,
+        hint=None,
+        category=None
+    ):
         self.question = question
         self.choices = choices
         self.answer = answer
+        self.hint = hint
+        self.category = category
 
     def show(self, number=None):
         if number is not None:
@@ -17,8 +28,19 @@ class Quiz(object):
         else:
             print(self.question)
 
-        for i, choice in enumerate(self.choices, start=1):
+        for i, choice in enumerate(
+            self.choices,
+            start=1
+        ):
             print(f"{i}. {choice}")
+
+    def show_hint(self):
+        if not self.hint:
+            print("등록된 힌트가 없습니다.")
+            return False
+
+        print(f"힌트: {self.hint}")
+        return True
 
     def is_correct(self, answer):
         return answer == self.answer
@@ -26,12 +48,19 @@ class Quiz(object):
 
 class QuizGame(object):
 
-    def __init__(self, quizzes, highest_score, state_path=None):
+    def __init__(
+        self,
+        quizzes,
+        highest_score,
+        state_path=None
+    ):
         self.quizzes = [
             Quiz(
+                category=quiz.get('category'),
                 question=quiz['question'],
                 choices=quiz['choices'],
-                answer=quiz['answer']
+                answer=quiz['answer'],
+                hint=quiz.get('hint'),
             )
             for quiz in quizzes
         ]
@@ -39,13 +68,16 @@ class QuizGame(object):
         self.highest_score = highest_score
         self.state_path = state_path
 
-    # ----------------------------------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------------------------------------------
     # Quiz Method
-    # ----------------------------------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------------------------------------------
 
     def quiz_solve(self):
         if not self.quizzes:
-            print("등록된 퀴즈가 없습니다. 퀴즈를 추가해주세요.")
+            print(
+                "등록된 퀴즈가 없습니다. "
+                "퀴즈를 추가해주세요."
+            )
             return
 
         num_questions = utils.input_number(
@@ -73,6 +105,17 @@ class QuizGame(object):
         ):
             quiz.show(i)
 
+            hint_used = False
+
+            if quiz.hint:
+                use_hint = utils.input_yes_no(
+                    "힌트를 보시겠습니까? (y/n): "
+                )
+
+                if use_hint == 'y':
+                    quiz.show_hint()
+                    hint_used = True
+
             answer = utils.input_number(
                 f"\n정답을 입력하세요 "
                 f"(1-{len(quiz.choices)}): ",
@@ -82,7 +125,12 @@ class QuizGame(object):
 
             if quiz.is_correct(answer):
                 print("정답입니다!")
-                score += 1
+
+                if hint_used:
+                    score += 0.5
+                else:
+                    score += 1
+
             else:
                 print(
                     f"오답입니다! "
@@ -101,6 +149,10 @@ class QuizGame(object):
 
     def quiz_add(self):
         print("새로운 퀴즈를 추가합니다.")
+
+        category = utils.input_text(
+            "카테고리를 입력하세요: "
+        )
 
         question = utils.input_text(
             "질문을 입력하세요: "
@@ -123,10 +175,16 @@ class QuizGame(object):
             definitions.max_num_choices
         )
 
+        hint = utils.input_text(
+            "힌트를 입력하세요: "
+        )
+
         quiz = Quiz(
+            category=category,
             question=question,
             choices=choices,
-            answer=answer
+            answer=answer,
+            hint=hint,
         )
 
         self.quizzes.append(quiz)
@@ -149,7 +207,9 @@ class QuizGame(object):
             len(self.quizzes)
         )
 
-        deleted_quiz = self.quizzes.pop(quiz_number - 1)
+        deleted_quiz = self.quizzes.pop(
+            quiz_number - 1
+        )
 
         self.save()
 
@@ -173,12 +233,14 @@ class QuizGame(object):
             start=1
         ):
             print(
-                f"{i}. {quiz.question}"
+                f"{i}. "
+                f"[{quiz.category}] "
+                f"{quiz.question}"
             )
 
-    # ----------------------------------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------------------------------------------
     # Score Method
-    # ----------------------------------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------------------------------------------
 
     def highest_score_update(self, score):
         if score <= self.highest_score:
@@ -200,24 +262,24 @@ class QuizGame(object):
             f"{self.highest_score}"
         )
 
-    # ----------------------------------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------------------------------------------
     # State Method
-    # ----------------------------------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------------------------------------------
 
     def save(self):
-        data = {
-            "quizzes": [
-                {
-                    "question": quiz.question,
-                    "choices": quiz.choices,
-                    "answer": quiz.answer
-                }
-                for quiz in self.quizzes
-            ],
-            "best_score": self.highest_score
-        }
+        quizzes = [
+            {
+                "category": quiz.category,
+                "question": quiz.question,
+                "choices": quiz.choices,
+                "answer": quiz.answer,
+                "hint": quiz.hint
+            }
+            for quiz in self.quizzes
+        ]
 
-        utils.save_json_file(
+        utils.update_state(
             self.state_path,
-            data
+            quizzes=quizzes,
+            best_score=self.highest_score
         )
