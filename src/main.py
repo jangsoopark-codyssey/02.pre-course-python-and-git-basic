@@ -11,7 +11,6 @@ import os
 import sys
 
 
-# Load environment variables from .env file
 dotenv.load_dotenv(
     path=os.path.join(
         definitions.project_root,
@@ -41,7 +40,6 @@ def parse_args():
 
     args = parser.parse_args()
 
-    # Set environment variables based on command-line arguments
     if args.data_file_path:
         os.environ['DATA_FILE_PATH'] = args.data_file_path
 
@@ -58,7 +56,6 @@ def main():
         os.getenv('DATA_FILE_NAME')
     )
 
-    # Load state from the data file
     configs = utils.load_state(state_path)
 
     if configs is None:
@@ -66,18 +63,23 @@ def main():
 
     app_config = configs.get('application', {})
     quizzes = configs.get('quizzes', [])
-    best_score = configs.get('best_score', 0)
+    score = configs.get(
+        'score',
+        {
+            'last': 0,
+            'best': 0,
+            'history': []
+        }
+    )
 
-    # Initialize the application
     app = application.Application(
         name=app_config.get('title'),
         menu=app_config.get('menu'),
         quizzes=quizzes,
-        best_score=best_score,
+        score=score,
         state_path=state_path,
     )
 
-    # Run the application
     app.run()
 
     return 0

@@ -1,3 +1,5 @@
+# application.py
+
 from common import utils
 from game import quiz
 
@@ -9,12 +11,19 @@ class Application(object):
         self._menu = params.get('menu')
         self._divider_width = params.get('divider_width', 50)
         self._quizzes = params.get('quizzes', [])
-        self._highest_score = params.get('best_score', 0)
+        self._score = params.get(
+            'score',
+            {
+                'last': 0,
+                'best': 0,
+                'history': []
+            }
+        )
         self._state_path = params.get('state_path')
 
         self._quiz_game = quiz.QuizGame(
             self._quizzes,
-            self._highest_score,
+            self._score,
             self._state_path
         )
 
@@ -55,9 +64,15 @@ class Application(object):
                     self._quiz_game.quiz_list()
 
                 case 4:
-                    self._quiz_game.highest_score_show()
+                    self._quiz_game.quiz_delete()
 
                 case 5:
+                    self._quiz_game.score_show()
+
+                case 6:
+                    self._quiz_game.score_history_show()
+
+                case 7:
                     running = False
 
                 case _:
