@@ -332,7 +332,13 @@ python -m unittest discover -s tests -v
     "score": {
         "last": 0,
         "best": 0,
-        "history": []
+        "history": [
+            {
+                "datetime": "2026-08-10",
+                "num_questions": 5,
+                "score": 1
+            }
+        ]
     },
     "quizzes": [
         {
